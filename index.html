@@ -3,9 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Comparaison Tool</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <header>
+        <h2>Comparaison des émmissions de GES des véhicules</h2>
+    </header>
+
+    <main>
+        <div class = tool_container>
+            <div class="parametre">
+                <!-- <h4>Paramètres</h4> -->
+                <label for="parametre_input">Distance annuelle :</label>
+                <input type="text" id="parametre_input" placeholder="Entrer une distance">
+            </div>
+
+            <div id="excel_dropdown">
+                <div id="first_vehicle" class="excel_dropdown_container" >
+                    <h4>Choix 1</h4>
+                    <label for="excel_dropdown_marque_first_vehicle">Marque :</label>
+                    <select class="excel_dropdown_marque" id="excel_dropdown_marque_first_vehicle" name="excel_dropdown_marque"></select>
+
+                    <label for="excel_dropdown_model_first_vehicle">Model :</label>
+                    <select class="excel_dropdown_model" id="excel_dropdown_model_first_vehicle" name="excel_dropdown_model"></select>
+
+                    <label for="excel_dropdown_annee_first_vehicle">Année :</label>
+                    <select class="excel_dropdown_annee" id="excel_dropdown_annee_first_vehicle" name="excel_dropdown_annee"></select>
+                </div>
+
+                <div id="second_vehicle" class="excel_dropdown_container">
+                    <h4>Choix 2</h4>
+                    <label for="excel_dropdown_marque_second_vehicle">Marque :</label>
+                    <select class="excel_dropdown_marque" id="excel_dropdown_marque_second_vehicle" name="excel_dropdown_marque"></select>
+
+                    <label for="excel_dropdown_model_second_vehicle">Model :</label>
+                    <select class="excel_dropdown_model" id="excel_dropdown_model_second_vehicle" name="excel_dropdown_model"></select>
+
+                    <label for="excel_dropdown_annee_second_vehicle">Année :</label>
+                    <select class="excel_dropdown_annee" id="excel_dropdown_annee_second_vehicle" name="excel_dropdown_annee"></select>
+                </div>            
+            </div>
+
+            <div id="graph_container">
+                <canvas class="graph" id="bar_graph_ges" width="400" height="300"></canvas>
+                <canvas class="graph" id="bar_graph_consom" width="400" height="300"></canvsas>
+            </div>
+
+            <div class="output">
+                <div class="output_ges">
+                    <label for="output_ges">Émissions de GES annuelles : </label>
+                    <p class="output_ges"> XX g CO2</p>
+                </div>
+
+                <div class="output_consom">
+                    <label for="output_consom">Consommation de carburant : </label>
+                    <p class="output_consom"> XX L/100km</p>
+                </div>
+            </div>
+
     
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+
+
+    <script 
+        src="index.js">
+    
+    
+    </script>
 </body>
 </html>

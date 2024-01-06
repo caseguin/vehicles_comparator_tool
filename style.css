@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #f0f0f0;
+    padding: 40px;
+    text-align: center;
+    font-size: 25px;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h4 {
+    font-size: 20px;
+}
+
+.excel_dropdown_container {
+    padding-bottom: 15px;
+}
+
+.tool_container {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.parametre,
+.vehicle_selection,
+#graph_container,
+.output {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.output {
+    font-weight: bold;
+}
+
+#graph_container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; 
+}
+
+.graph {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+footer {
+    background-color: #fff;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+
+@media screen and (max-width: 600px) {
+    main {
+        padding: 10px;
+    }
+
+    #graph_container {
+        grid-template-columns: 1fr; 
+    }
+}
