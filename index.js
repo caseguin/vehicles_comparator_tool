@@ -27,56 +27,121 @@
 
 
 
+function listDropdown(dropdown_id, data) {
+  const selectElement = document.getElementById(dropdown_id);
+  selectElement.innerHTML = '';
 
+  const initialOpt = document.createElement('option');
+  initialOpt.value = '';
+  initialOpt.textContent = '';
+  selectElement.appendChild(initialOpt);
 
-
-// Lien de db vers liste déroullante
-function fetchMarque() {
-    fetch('http://127.0.0.1:5000')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Retrieved marques:', data.marques);
-            lienListMarque(data.marques)
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function lienListMarque(marques) {
-    let selectElement = document.getElementById('excel_dropdown_marque_first_vehicle');
-    marques.forEach(function(marque) {
-      let opt = document.createElement('option');
-      opt.value = marque;
-      opt.innerHTML = marque;
-      selectElement.appendChild(opt);
-    })
-}
-
-function fetchMarque() {
-  fetch('http://127.0.0.1:5000/models')
-      .then(response => response.json())
-      .then(data => {
-          console.log('Retrieved model:', data.model);
-          lienListMarque(data.marques)
-      })
-      .catch(error => console.error('Error:', error));
-}
-
-function lienListMarque(marques) {
-  let selectElement = document.getElementById('excel_dropdown_model_first_vehicle');
-  marques.forEach(function(marque) {
-    let opt = document.createElement('option');
-    opt.value = marque;
-    opt.innerHTML = marque;
+  data.forEach((value) => {
+    const opt = document.createElement('option');
+    opt.value = value;
+    opt.textContent = value;
     selectElement.appendChild(opt);
-  })
+  });
+
 }
 
-fetchMarque()
 
+async function fetchDropdownData(path, dropdown_id, value_search) {
+  try {
+    const response = await fetch(path);
+    const data = await response.json();
+    listDropdown(dropdown_id, data[value_search]);
+
+    return new Promise((resolve) => {
+      const selectElement = document.getElementById(dropdown_id);
+      selectElement.addEventListener('change', () => {
+        const selectedValue = selectElement.value;
+        resolve(selectedValue);
+      });
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+async function initializeDropdowns(list_nb) {
+  const dropdownMarquesId = `excel_dropdown_marque_${list_nb}_vehicle`;
+  const dropdownModelsId = `excel_dropdown_model_${list_nb}_vehicle`;
+  const dropdownAnneeId = `excel_dropdown_annee_${list_nb}_vehicle`;
+
+  try {
+    const selectedMarque = await fetchDropdownData('http://127.0.0.1:5000/marques', dropdownMarquesId, 'marques');
+    
+    const selectElementMarque = document.getElementById(dropdownMarquesId);
+    selectElementMarque.addEventListener('change', async () => {
+      const selectedMarqueValue = selectElementMarque.value;
+      await fetchDropdownData(`http://127.0.0.1:5000/${selectedMarqueValue}/models`, dropdownModelsId, 'models');
+
+      const selectElementModel = document.getElementById(dropdownModelsId);
+      const selectedModelMarque = selectElementMarque.value; // Use a different variable name to avoid confusion
+      await fetchDropdownData(`http://127.0.0.1:5000/${selectedModelMarque}/${selectElementModel.value}/annee`, dropdownAnneeId, 'annee');
+
+    });
+
+    const event = new Event('change');
+    selectElementMarque.dispatchEvent(event);
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
+initializeDropdowns('first');
+initializeDropdowns('second');
+
+
+// send data to flask
+let data_to_send = {
+  marque: 'Honda',
+  model: 'Civic',
+  annee: '2015'
+};
+
+// Fetch request to Flask endpoint
+fetch('/eff', {
+  method: 'POST', // Use POST method to send data
+  headers: {
+      'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data_to_send) // Convert data to JSON format
+})
+.then(response => response.json())
+.then(data_to_send => {
+  // Handle response from Flask
+  console.log(data_to_send);
+})
+.catch(error => {
+  // Handle error
+  console.error('Error:', error);
+});
+
+
+
+
+
+
+const effDropdown = document.getElementById('effDropdown');
+
+effDropdown.addEventListener('change', function () {
+  const selectedEffValue = effDropdown.value;
+  console.log('Selected Fuel Efficiency:', selectedEffValue);
+  // Now you can use the selectedEffValue as needed, for example, updating another part of your UI or sending it to the server.
+});
+
+
+const distance = document.getElementById('parametre_input')
+console.log(distance)
 
 // Calcul de la consommation annuelle
 function calculConsommation() {
-
+  // const 
 }
 
 // Calcul des émissions de ges annuelle
