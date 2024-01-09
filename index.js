@@ -26,6 +26,24 @@
   });
 
 
+// Envoi des données vers flask
+function sendDropdown(dataToSend, path) {
+  fetch(path, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataToSend)
+  })
+  .then(response => {
+    console.log('Response from server:', response);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+
 
 function listDropdown(dropdown_id, data) {
   const selectElement = document.getElementById(dropdown_id);
@@ -71,21 +89,41 @@ async function initializeDropdowns(list_nb) {
   const dropdownAnneeId = `excel_dropdown_annee_${list_nb}_vehicle`;
 
   try {
-    const selectedMarque = await fetchDropdownData('http://127.0.0.1:5000/marques', dropdownMarquesId, 'marques');
-    
+    await fetchDropdownData('http://127.0.0.1:5000/marques', dropdownMarquesId, 'marques');
     const selectElementMarque = document.getElementById(dropdownMarquesId);
     selectElementMarque.addEventListener('change', async () => {
-      const selectedMarqueValue = selectElementMarque.value;
-      await fetchDropdownData(`http://127.0.0.1:5000/${selectedMarqueValue}/models`, dropdownModelsId, 'models');
+      const selectMarqueValue = selectElementMarque.value; // Extrait la valeur de la marque
 
-      const selectElementModel = document.getElementById(dropdownModelsId);
-      const selectedModelMarque = selectElementMarque.value; // Use a different variable name to avoid confusion
-      await fetchDropdownData(`http://127.0.0.1:5000/${selectedModelMarque}/${selectElementModel.value}/annee`, dropdownAnneeId, 'annee');
+      await fetchDropdownData(`http://127.0.0.1:5000/${selectMarqueValue}/models`, dropdownModelsId, 'models');
+      const selectElementModel = document.getElementById(dropdownModelsId);  
+      const selectModelValue = selectElementModel.value; // Extrait la valeur du model
+      
+      await fetchDropdownData(`http://127.0.0.1:5000/${selectMarqueValue}/${selectModelValue}/annee`, dropdownAnneeId, 'annee');
+      const selectElementAnne = document.getElementById(dropdownAnneeId);
+      const selectedAnneeValue = selectElementAnne.value;  // Extrait la valeur de l'année
 
+
+      // Optenir l'efficacité
+      if (selectMarqueValue && selectModelValue && selectedAnneeValue) {
+        console.log(selectMarqueValue);
+        console.log(selectModelValue);
+        console.log(selectedAnneeValue);
+  
+        const dropdown_values = {
+          key: 'value',
+          marque: selectMarqueValue,
+          model: selectModelValue,
+          annee: selectedAnneeValue
+        };
+        sendDropdown(dropdown_values, 'http://127.0.0.1:5000/dropdown_value');
+        retreiveEff();
+      }
+      
     });
-
+    
     const event = new Event('change');
     selectElementMarque.dispatchEvent(event);
+    
     
   } catch (error) {
     console.error('Error:', error);
@@ -93,51 +131,23 @@ async function initializeDropdowns(list_nb) {
 }
 
 
+async function retreiveEff() {
+  try {
+  const effResponse = await fetch('http://127.0.0.1:5000/eff');
+  const effValue = await effResponse.json();
+  console.log('Efficiency: ', effValue);
+  } catch (error) {
+    console.log('Error:', error)
+  }
+}
+
 initializeDropdowns('first');
 initializeDropdowns('second');
 
 
-// send data to flask
-let data_to_send = {
-  marque: 'Honda',
-  model: 'Civic',
-  annee: '2015'
-};
 
-// Fetch request to Flask endpoint
-fetch('/eff', {
-  method: 'POST', // Use POST method to send data
-  headers: {
-      'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data_to_send) // Convert data to JSON format
-})
-.then(response => response.json())
-.then(data_to_send => {
-  // Handle response from Flask
-  console.log(data_to_send);
-})
-.catch(error => {
-  // Handle error
-  console.error('Error:', error);
-});
-
-
-
-
-
-
-const effDropdown = document.getElementById('effDropdown');
-
-effDropdown.addEventListener('change', function () {
-  const selectedEffValue = effDropdown.value;
-  console.log('Selected Fuel Efficiency:', selectedEffValue);
-  // Now you can use the selectedEffValue as needed, for example, updating another part of your UI or sending it to the server.
-});
-
-
-const distance = document.getElementById('parametre_input')
-console.log(distance)
+// const distance = document.getElementById('parametre_input')
+// console.log(distance)
 
 // Calcul de la consommation annuelle
 function calculConsommation() {
