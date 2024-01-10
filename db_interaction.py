@@ -57,7 +57,7 @@ def get_dropdown():
 
 
 
-# Extraire la selection
+# Envoyer eff associé au dropdown
 @app.route('/eff')
 def get_eff():
     global received_data
@@ -75,6 +75,22 @@ def get_eff():
     return jsonify({'eff' : eff})
     
 
+# Envoyer ges associé au dropdown
+@app.route('/ges')
+def get_ges():
+    global received_data
+    marque = received_data.get('marque')
+    model = received_data.get('model')
+    annee = received_data.get('annee')
+
+    connection = sqlite3.connect('scrap_data.db')
+    cursor = connection.cursor()
+    cursor.execute("SELECT ges FROM vehicles WHERE marque = ? AND modele = ? AND annee = ?", (marque, model, annee))
+    ges_result = cursor.fetchone()
+    ges = ges_result[0]
+    connection.close()
+
+    return jsonify({'ges' : ges})
 
 
 

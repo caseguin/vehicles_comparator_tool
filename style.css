@@ -71,6 +71,15 @@ select {
     font-weight: bold;
 }
 
+#ges_value_first_vehicle,
+#ges_value_second_vehicle,
+#consom_value_first_vehicle,
+#consom_value_second_vehicle {
+    font-size: 15px;
+    font-weight: normal;
+} 
+
+
 #graph_container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

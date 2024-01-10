@@ -15,8 +15,11 @@
     <main>
         <div class = tool_container>
             <div class="parametre">
-                <label for="parametre_input">Distance annuelle :</label>
-                <input type="text" id="parametre_input" placeholder="Entrer une distance">
+                <label for="parametre_input">Paramètres</label>
+                <p>Distance (km)</p>
+                <input type="text" id="input_distance" placeholder="Entrer une distance">
+                <p>Prix du carburant ($)</p>
+                <input type="text" id="input_prix" placeholder="Entrer un prix de carburant">
             </div>
 
             <div id="excel_dropdown">
@@ -52,13 +55,16 @@
 
             <div class="output">
                 <div class="output_ges">
-                    <label for="output_ges">Émissions de GES annuelles : </label>
-                    <p class="output_ges"> XX g CO2</p>
+                    <label for="output_ges">Émissions de GES : </label>
+                    <p class="output_ges" id="ges_value_first_vehicle"></p>
+                    <p class="output_ges" id="ges_value_second_vehicle"></p>
                 </div>
 
                 <div class="output_consom">
                     <label for="output_consom">Consommation de carburant : </label>
-                    <p class="output_consom"> XX L/100km</p>
+                    <p class="output_consom" id="consom_value_first_vehicle"></p>
+                    <p class="output_consom" id="consom_value_second_vehicle"></p>
+                    
                 </div>
             </div>
 

@@ -83,7 +83,9 @@ async function fetchDropdownData(path, dropdown_id, value_search) {
   }
 }
 
-async function initializeDropdowns(list_nb) {
+
+// Main function
+async function initializeDropdowns(list_nb, consId, gesId) {
   const dropdownMarquesId = `excel_dropdown_marque_${list_nb}_vehicle`;
   const dropdownModelsId = `excel_dropdown_model_${list_nb}_vehicle`;
   const dropdownAnneeId = `excel_dropdown_annee_${list_nb}_vehicle`;
@@ -116,7 +118,8 @@ async function initializeDropdowns(list_nb) {
           annee: selectedAnneeValue
         };
         sendDropdown(dropdown_values, 'http://127.0.0.1:5000/dropdown_value');
-        retreiveEff();
+        retreiveEff(consId, selectMarqueValue, selectModelValue, selectedAnneeValue);
+        retreiveGes(gesId, selectMarqueValue, selectModelValue, selectedAnneeValue);
       }
       
     });
@@ -130,19 +133,51 @@ async function initializeDropdowns(list_nb) {
   }
 }
 
-
-async function retreiveEff() {
+ 
+// Obtenir Cons et imprimer sur html
+async function retreiveEff(consId, marque, model, annee) {
   try {
   const effResponse = await fetch('http://127.0.0.1:5000/eff');
   const effValue = await effResponse.json();
-  console.log('Efficiency: ', effValue);
+  console.log('Efficiency: ', effValue.eff);
+
+  const effValuePrint = document.getElementById(consId);
+  effValuePrint.innerHTML = `${marque} ${model} ${annee} : ${effValue.eff} L/100km`;
   } catch (error) {
-    console.log('Error:', error)
+    console.log('Error:', error);
   }
 }
 
-initializeDropdowns('first');
-initializeDropdowns('second');
+// Obtenir GES et imprimer sur html
+async function retreiveGes(gesId, marque, model, annee) {
+  try {
+  const gesResponse = await fetch('http://127.0.0.1:5000/ges');
+  const gesValue = await gesResponse.json();
+  console.log('GES: ', gesValue.ges);
+
+  const gesValuePrint = document.getElementById(gesId);
+  gesValuePrint.innerHTML = `${marque} ${model} ${annee} : ${gesValue.ges} g CO2`;
+  } catch (error) {
+    console.log('Error:', error);
+  }
+}
+
+// Obtenir la distance choisi
+function definirDistance() {
+  let distance = 1; // Assuming a default value of 1
+  const inputDistance = document.getElementById('input_distance');
+  if (inputDistance) {
+    distance = inputDistance.value;
+    console.log(distance);
+  } else {
+    console.error("Input element not found");
+  }
+}
+
+
+
+initializeDropdowns('first', 'consom_value_first_vehicle', 'ges_value_first_vehicle');
+initializeDropdowns('second', 'consom_value_second_vehicle', 'ges_value_second_vehicle');
 
 
 
